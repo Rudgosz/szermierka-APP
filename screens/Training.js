@@ -1,33 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native';
 
 const crossMargin = 6;
 
 const Training = () => {
   const [activeSection, setActiveSection] = useState(null);
+  const [trainingStarted, setTrainingStarted] = useState(false);
+  const [showStartMessage, setShowStartMessage] = useState(true);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      // Generate a random number between 0 and 3 (for 4 sections)
-      const randomSection = Math.floor(Math.random() * 4);
-      setActiveSection(randomSection);
+    if (trainingStarted) {
+      const interval = setInterval(() => {
+        // Generate a random number between 0 and 3 (for 4 sections)
+        const randomSection = Math.floor(Math.random() * 4);
+        setActiveSection(randomSection);
 
-      // Clear active section after 2 seconds
-      setTimeout(() => {
-        setActiveSection(null);
-      }, 2000);
-    }, 3000); // Change every 3 seconds (2 seconds active + 1 second inactive)
-    
-    // Clean up interval on unmount
-    return () => clearInterval(interval);
-  }, []);
+        // Clear active section after 2 seconds
+        setTimeout(() => {
+          setActiveSection(null);
+        }, 2000);
+      }, 3000); // Change every 3 seconds (2 seconds active + 1 second inactive)
 
-  
+      // Clean up interval on unmount or when training is stopped
+      return () => clearInterval(interval);
+    }
+  }, [trainingStarted]);
+
+  const handleStartPress = () => {
+    if (!trainingStarted) {
+      setTrainingStarted(true);
+      setShowStartMessage(false);
+    }
+  };
+
   const renderSections = () => {
     const screenWidth = Dimensions.get('window').width;
     const screenHeight = Dimensions.get('window').height;
 
-    const sectionWidth = screenWidth  / 2 - crossMargin; // Each section takes half of the screen width
+    const sectionWidth = screenWidth / 2 - crossMargin; // Each section takes half of the screen width
     const sectionHeight = (screenHeight - 80) / 2; // Calculate height with space at top and bottom
 
     return [0, 1, 2, 3].map((index) => (
@@ -57,6 +67,15 @@ const Training = () => {
             {renderSections().slice(2, 4)}
           </View>
         </View>
+        {showStartMessage && (
+          <TouchableOpacity
+            style={styles.dimScreen}
+            activeOpacity={1}
+            onPress={handleStartPress}
+          >
+            <Text style={styles.startText}>Tap to start training</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -73,6 +92,18 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative', // Ensure content inside crossContainer is positioned correctly
+  },
+  dimScreen: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.5)', // Semi-transparent black overlay
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  startText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#fff', // White text color
   },
   row: {
     flexDirection: 'row',
