@@ -2,8 +2,8 @@ import React from 'react';
 import { Button, View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 
 const data = [
-  { key: 'Screen2', title: 'Go to Screen 2' },
-  { key: 'Screen3', title: 'Go to Screen 3' },
+  { key: 'Training', title: 'Training' },
+  { key: 'Screen3', title: 'Screen 3' },
   // Add more items as needed
 ];
 
@@ -17,9 +17,14 @@ function HomeScreen({ navigation }) {
     </TouchableOpacity>
   );
 
+
+
+
+//<Text style={styles.header}>Home</Text>
+
   return (
     <View style={{ flex: 1 }}>
-      <Text style={styles.header}>Home Screen</Text>
+      
       <FlatList
         data={data}
         renderItem={renderItem}
@@ -31,16 +36,16 @@ function HomeScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   header: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: 'bold',
     textAlign: 'center',
     marginVertical: 20,
   },
   item: {
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
+    backgroundColor: '#a38874',
+    padding: 15,
+    marginVertical: 5,
+    marginHorizontal: 5,
     alignItems: 'center',
   },
   title: {

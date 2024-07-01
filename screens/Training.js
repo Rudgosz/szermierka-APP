@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, View, Text } from 'react-native';
 
-function Screen2({ navigation }) {
+function Training({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Screen 2</Text>
@@ -13,4 +13,4 @@ function Screen2({ navigation }) {
   );
 }
 
-export default Screen2;
+export default Training;
