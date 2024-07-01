@@ -9,8 +9,10 @@ const Training = () => {
   const [showStartMessage, setShowStartMessage] = useState(true);
 
   useEffect(() => {
+    let interval;
+
     if (trainingStarted) {
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         // Generate a random number between 0 and 3 (for 4 sections)
         const randomSection = Math.floor(Math.random() * 4);
         setActiveSection(randomSection);
@@ -20,16 +22,18 @@ const Training = () => {
           setActiveSection(null);
         }, 2000);
       }, 3000); // Change every 3 seconds (2 seconds active + 1 second inactive)
-
-      // Clean up interval on unmount or when training is stopped
-      return () => clearInterval(interval);
     }
+
+    return () => clearInterval(interval);
   }, [trainingStarted]);
 
   const handleStartPress = () => {
     if (!trainingStarted) {
       setTrainingStarted(true);
       setShowStartMessage(false);
+    } else {
+      setTrainingStarted(false);
+      setShowStartMessage(true);
     }
   };
 
@@ -67,15 +71,18 @@ const Training = () => {
             {renderSections().slice(2, 4)}
           </View>
         </View>
-        {showStartMessage && (
-          <TouchableOpacity
-            style={styles.dimScreen}
-            activeOpacity={1}
-            onPress={handleStartPress}
-          >
-            <Text style={styles.startText}>Tap to start training</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity
+          style={[
+            styles.dimScreen,
+            (showStartMessage || !trainingStarted) ? { backgroundColor: 'rgba(0,0,0,0.5)' } : null,
+          ]}
+          activeOpacity={1}
+          onPress={handleStartPress}
+        >
+          <Text style={styles.startText}>
+            {!trainingStarted ? 'Tap to start training\n(tap again to pause)' : ''}
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -96,7 +103,6 @@ const styles = StyleSheet.create({
   },
   dimScreen: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.5)', // Semi-transparent black overlay
     justifyContent: 'center',
     alignItems: 'center',
   },
