@@ -1,82 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, Dimensions } from 'react-native';
 
-const activeTime = 1000;
-const inactiveTime = 500;
-const middlePadding = 49; // Padding between rectangles in the middle
+const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
 
-const Training = () => {
-  const [activeSection, setActiveSection] = useState(null);
-  const [trainingStarted, setTrainingStarted] = useState(false);
-  const [showStartMessage, setShowStartMessage] = useState(true);
+const triangleWidthConst = 10;
+const triangleOffset = 30;
 
-  useEffect(() => {
-    let interval;
-
-    if (trainingStarted) {
-      interval = setInterval(() => {
-        const randomSection = Math.floor(Math.random() * 4);
-        setActiveSection(randomSection);
-
-        setTimeout(() => {
-          setActiveSection(null);
-        }, activeTime);
-      }, activeTime + inactiveTime);
-    }
-
-    return () => clearInterval(interval);
-  }, [trainingStarted]);
-
-  const handleStartPress = () => {
-    if (!trainingStarted) {
-      setTrainingStarted(true);
-      setShowStartMessage(false);
-    } else {
-      setTrainingStarted(false);
-      setShowStartMessage(true);
-    }
-  };
-
-  const renderSections = () => {
-    const screenWidth = Dimensions.get('window').width;
-    const screenHeight = Dimensions.get('window').height;
-
-    const positions = [
-      { top: 0, left: screenWidth / 2 - 25, width: 50, height: screenHeight / 2 - middlePadding / 2 }, // Top center to middle
-      { top: screenHeight / 2 + middlePadding / 2, left: screenWidth / 2 - 25, width: 50, height: screenHeight / 2 - middlePadding / 2 }, // Middle to bottom center
-      { top: screenHeight / 2 - 25, left: 0, width: screenWidth / 2 - middlePadding / 2, height: 50 }, // Left center to middle
-      { top: screenHeight / 2 - 25, left: screenWidth / 2 + middlePadding / 2, width: screenWidth / 2 - middlePadding / 2, height: 50 }, // Right center to middle
-    ];
-
-    return positions.map((style, index) => (
-      <View
-        key={index}
-        style={[
-          styles.section,
-          activeSection === index ? styles.activeSection : null,
-          style,
-        ]}
-      />
-    ));
-  };
-
+const TriangleScreen = () => {
   return (
     <View style={styles.container}>
-      <View style={styles.crossContainer}>
-        {renderSections()}
-        <TouchableOpacity
-          style={[
-            styles.dimScreen,
-            (showStartMessage || !trainingStarted) ? { backgroundColor: 'rgba(0,0,0,0.5)' } : null,
-          ]}
-          activeOpacity={1}
-          onPress={handleStartPress}
-        >
-          <Text style={styles.startText}>
-            {!trainingStarted ? 'Tap to start training\n(tap again to pause)' : ''}
-          </Text>
-        </TouchableOpacity>
-      </View>
+      <View style={styles.blueTriangle} />
+      <View style={styles.redTriangle} />
+      <View style={styles.greenTriangle} />
+      <View style={styles.yellowTriangle} />
     </View>
   );
 };
@@ -84,36 +21,78 @@ const Training = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
     backgroundColor: '#f0f0f0',
-    paddingTop: 30,
-    paddingBottom: 0,
   },
-  crossContainer: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  dimScreen: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  startText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
-  },
-  section: {
+  blueTriangle: {
     position: 'absolute',
-    backgroundColor: '#c0c0c0',
-    borderWidth: 1,
-    borderColor: '#808080',
+    top: screenHeight / 2 + triangleOffset,
+    left: (screenWidth / 2) - (screenWidth / triangleWidthConst),
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderLeftWidth: screenWidth / triangleWidthConst,
+    borderRightWidth: screenWidth / triangleWidthConst,
+    borderBottomWidth: screenHeight / 2,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'blue',
+    transform: [{ rotate: '0deg' }],
+    marginBottom: 0,
   },
-  activeSection: {
-    backgroundColor: '#ffcc00',
+  redTriangle: {
+    position: 'absolute',
+    top: triangleOffset,
+    right: (screenWidth / 2) - (screenWidth / triangleWidthConst),
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderLeftWidth: screenWidth / triangleWidthConst,
+    borderRightWidth: screenWidth / triangleWidthConst,
+    borderBottomWidth: screenHeight / 2,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'red',
+    transform: [{ rotate: '180deg' }],
+    marginBottom: screenHeight,
+  },
+  greenTriangle: {
+    position: 'absolute',
+    top: screenHeight / 2  + triangleOffset - screenWidth / 4,
+    right: screenWidth / 4 - screenWidth / triangleWidthConst,
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderLeftWidth: screenWidth / triangleWidthConst,
+    borderRightWidth: screenWidth / triangleWidthConst,
+    borderBottomWidth: screenWidth / 2,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'green',
+    transform: [{ rotate: '-90deg' }],
+    marginBottom: 0,
+  },
+  yellowTriangle: {
+    position: 'absolute',
+    top: screenHeight / 2  + triangleOffset - screenWidth / 4,
+    left: screenWidth / 4 - screenWidth / triangleWidthConst,
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderLeftWidth: screenWidth / triangleWidthConst,
+    borderRightWidth: screenWidth / triangleWidthConst,
+    borderBottomWidth: screenWidth / 2,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'yellow',
+    transform: [{ rotate: '90deg' }],
+    marginBottom: 0,
   },
 });
 
-export default Training;
+export default TriangleScreen;
