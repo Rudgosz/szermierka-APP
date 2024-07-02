@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Dimensions, Text, TouchableOpacity } from 'react-native';
 
 const crossMargin = 6;
+const activeTime = 1000;
+const inactiveTime = 500;
 
 const Training = () => {
   const [activeSection, setActiveSection] = useState(null);
@@ -20,8 +22,8 @@ const Training = () => {
         // Clear active section after 2 seconds
         setTimeout(() => {
           setActiveSection(null);
-        }, 2000);
-      }, 3000); // Change every 3 seconds (2 seconds active + 1 second inactive)
+        }, activeTime);
+      }, activeTime + inactiveTime); // Change every 3 seconds (2 seconds active + 1 second inactive)
     }
 
     return () => clearInterval(interval);
@@ -123,7 +125,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#c0c0c0',
     borderWidth: 1,
     borderColor: '#808080',
-    margin: crossMargin - 2,
+    margin: crossMargin - 3,
   },
   crossSection: {
     backgroundColor: '#916f4b', // Brownish background color for cross sections
