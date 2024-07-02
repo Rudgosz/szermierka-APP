@@ -14,7 +14,6 @@ const bottomWidthConst = Math.sqrt((Math.pow(screenHeight / 2, 2) + Math.pow(scr
 
 //color
 const backgroundColor = '#f0f0f0';
-const coloredTriangleColor = 'yellow';
 
 //time
 const turnOnTime = 1000;
@@ -45,13 +44,20 @@ const TriangleScreen = () => {
   useEffect(() => {
     if (isColoringActive) {
       const triangleNames = Object.keys(defaultTriangleColors);
+      
+      // Define possible colors
+      const possibleColors = ['yellow', 'green', 'red'];
+      
       const changeColor = () => {
         const randomTriangle = triangleNames[Math.floor(Math.random() * triangleNames.length)];
         const originalColor = defaultTriangleColors[randomTriangle];
+        
+        // Select a random color from possibleColors
+        const randomColor = possibleColors[Math.floor(Math.random() * possibleColors.length)];
 
         setTriangleColors((prevColors) => ({
           ...prevColors,
-          [randomTriangle]: coloredTriangleColor
+          [randomTriangle]: randomColor
         }));
 
         setTimeout(() => {
@@ -216,7 +222,6 @@ const styles = StyleSheet.create({
     width: screenWidth / 6,
     height: screenWidth / 6,
     borderRadius: screenWidth / 1,
-    //backgroundColor: 'blue', // Change color as needed
     top: screenHeight / 2 + triangleOffset - screenWidth / 12,
     left: screenWidth / 2 - screenWidth / 12,
   },
@@ -248,7 +253,6 @@ const styles = StyleSheet.create({
     fontSize: 200,
     fontWeight: 'bold',
   },
-  
 });
 
 export default TriangleScreen;
