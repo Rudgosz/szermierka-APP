@@ -7,6 +7,9 @@ const screenWidth = Dimensions.get('window').width;
 const triangleWidthConst = 10;
 const triangleOffset = 30;
 
+const rotationAngle = Math.atan(screenWidth / screenHeight); // Radians
+const bottomWidthConst = Math.sqrt((Math.pow(screenHeight/2, 2) + Math.pow(screenWidth/2, 2)));
+
 const TriangleScreen = () => {
   return (
     <View style={styles.container}>
@@ -14,6 +17,7 @@ const TriangleScreen = () => {
       <View style={styles.redTriangle} />
       <View style={styles.greenTriangle} />
       <View style={styles.yellowTriangle} />
+      <View style={styles.purpleTriangle} />
     </View>
   );
 };
@@ -45,7 +49,7 @@ const styles = StyleSheet.create({
   redTriangle: {
     position: 'absolute',
     top: triangleOffset,
-    right: (screenWidth / 2) - (screenWidth / triangleWidthConst),
+    left: (screenWidth / 2) - (screenWidth / triangleWidthConst),
     width: 0,
     height: 0,
     backgroundColor: 'transparent',
@@ -61,8 +65,8 @@ const styles = StyleSheet.create({
   },
   greenTriangle: {
     position: 'absolute',
-    top: screenHeight / 2  + triangleOffset - screenWidth / 4,
-    right: screenWidth / 4 - screenWidth / triangleWidthConst,
+    top: screenHeight / 2 + triangleOffset - screenWidth / 4,
+    left: (screenWidth / 4 - screenWidth / triangleWidthConst) + screenWidth/2,
     width: 0,
     height: 0,
     backgroundColor: 'transparent',
@@ -78,7 +82,7 @@ const styles = StyleSheet.create({
   },
   yellowTriangle: {
     position: 'absolute',
-    top: screenHeight / 2  + triangleOffset - screenWidth / 4,
+    top: screenHeight / 2 + triangleOffset - screenWidth / 4,
     left: screenWidth / 4 - screenWidth / triangleWidthConst,
     width: 0,
     height: 0,
@@ -93,6 +97,30 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '90deg' }],
     marginBottom: 0,
   },
+  
+  purpleTriangle: {
+    position: 'absolute',
+    top: screenHeight/2 - bottomWidthConst/2 + triangleOffset,
+    left: screenWidth/2 - screenWidth / triangleWidthConst,
+    width: 0,
+    height: 0,
+    backgroundColor: 'transparent',
+    borderStyle: 'solid',
+    borderLeftWidth: screenWidth / triangleWidthConst,
+    borderRightWidth: screenWidth / triangleWidthConst,
+    borderBottomWidth: bottomWidthConst,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: 'purple',
+    transform: [
+      {rotate: `${rotationAngle}rad` },
+      {translateX: 0},
+      {translateY: bottomWidthConst/2},
+      
+    ],
+    marginBottom: 0,
+  },
+  
 });
 
 export default TriangleScreen;
