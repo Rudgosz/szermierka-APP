@@ -2,9 +2,11 @@ import React from 'react';
 import { Button, View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 
 const data = [
-  { key: 'Training', title: 'Training' },
-  { key: 'Screen3', title: 'Screen 3' },
-  { key: 'Training2', title: 'Training 2' },
+  { key: 'Training', title: 'Full training' },
+  { key: 'TrainingAttack', title: 'Training attack' },
+  { key: 'TrainingParry', title: 'Training parry' },
+  { key: 'TrainingDodge', title: 'Training dodge' },
+  
   // Add more items as needed
 ];
 

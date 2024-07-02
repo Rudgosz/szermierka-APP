@@ -14,7 +14,7 @@ const bottomWidthConst = Math.sqrt((Math.pow(screenHeight / 2, 2) + Math.pow(scr
 
 //color
 const backgroundColor = '#f0f0f0';
-const coloredTriangleColor = 'yellow';
+const coloredTriangleColor = 'green';
 
 //time
 const turnOnTime = 1000;

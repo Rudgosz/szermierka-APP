@@ -4,8 +4,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import HomeScreen from './screens/HomeScreen';
 import Training from './screens/Training';
-import Screen3 from './screens/Screen3';
-import Training2 from './screens/Training2';
+import TrainingDodge from './screens/TrainingDodge';
+import TrainingAttack from './screens/TrainingAttack';
+import TrainingParry from './screens/TrainingParry';
 import SettingsScreen from './screens/SettingsScreen';
 
 const Stack = createNativeStackNavigator();
@@ -16,8 +17,9 @@ function App() {
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Training" component={Training} options={{ headerShown: false }}/>
-        <Stack.Screen name="Screen3" component={Screen3} />
-        <Stack.Screen name="Training2" component={Training2} options={{ headerShown: false }}/>
+        <Stack.Screen name="TrainingDodge" component={TrainingDodge} options={{ headerShown: false }}/>
+        <Stack.Screen name="TrainingAttack" component={TrainingAttack} options={{ headerShown: false }}/>
+        <Stack.Screen name="TrainingParry" component={TrainingParry} options={{ headerShown: false }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
