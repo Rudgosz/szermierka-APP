@@ -49,6 +49,13 @@ function HomeScreen({ navigation }) {
       setDisableFlatList(false);
     }
 
+    if (!isAttackSwitchOn && !isDodgeSwitchOn && !isParrySwitchOn) {
+      setDisableFlatList(true);
+    } else {
+      setDisableFlatList(false);
+    }
+    
+
     // Check if Min Off Time > Max Off Time
     if (turnOffTimeMin > turnOffTimeMax) {
       setMaxOffTimeError(true);
@@ -61,12 +68,15 @@ function HomeScreen({ navigation }) {
     setTurnOffTimeMinError(!isValidNumber(turnOffTimeMin));
     setTurnOffTimeMaxError(!isValidNumber(turnOffTimeMax));
 
-  }, [turnOnTimeMax, turnOffTimeMin, turnOffTimeMax]);
+  }, [turnOnTimeMax, turnOffTimeMin, turnOffTimeMax, isAttackSwitchOn, isDodgeSwitchOn, isParrySwitchOn]);
 
   // Function to clear TextInput fields
   const clearTextInput = (setStateFunction) => {
     setStateFunction('');
   };
+
+
+  
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
