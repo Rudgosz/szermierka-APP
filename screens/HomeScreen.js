@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button, View, Text, FlatList, TouchableOpacity, StyleSheet, TextInput, Switch } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; // Importing MaterialIcons from Expo vector icons
 
+
+
 const data = [
   { 
     key: 'Training',
@@ -168,8 +170,13 @@ function HomeScreen({ navigation }) {
 
       {/* Toggle switches */}
       <View style={styles.toggleContainer}>
+
+      <View style={styles.separator}/>
+        
         <View style={styles.toggleRow}>
-          <Text style={styles.label}>Attack (green):</Text>
+          
+          <Text style={styles.labelModes}>Attack (green):</Text>
+          
           <Switch
             trackColor={{ false: "#767577", true: "#81b0ff" }}
             thumbColor={isAttackSwitchOn ? "#f5dd4b" : "#f4f3f4"}
@@ -178,8 +185,11 @@ function HomeScreen({ navigation }) {
             value={isAttackSwitchOn}
           />
         </View>
+
+        <View style={styles.separator}/>
+
         <View style={styles.toggleRow}>
-          <Text style={styles.label}>Dodge (red):</Text>
+          <Text style={styles.labelModes}>Dodge (red):</Text>
           <Switch
             trackColor={{ false: "#767577", true: "#81b0ff" }}
             thumbColor={isDodgeSwitchOn ? "#f5dd4b" : "#f4f3f4"}
@@ -188,8 +198,10 @@ function HomeScreen({ navigation }) {
             value={isDodgeSwitchOn}
           />
         </View>
+        <View style={styles.separator}/>
+
         <View style={styles.toggleRow}>
-          <Text style={styles.label}>Parry (yellow):</Text>
+          <Text style={styles.labelModes}>Parry (yellow):</Text>
           <Switch
             trackColor={{ false: "#767577", true: "#81b0ff" }}
             thumbColor={isParrySwitchOn ? "#f5dd4b" : "#f4f3f4"}
@@ -198,6 +210,7 @@ function HomeScreen({ navigation }) {
             value={isParrySwitchOn}
           />
         </View>
+        <View style={styles.separator}/>
       </View>
 
       <FlatList
@@ -238,6 +251,12 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     marginBottom: 5,
+    fontWeight: 'bold',
+  },
+  labelModes: {
+    fontSize: 18,
+    marginBottom: 5,
+    //fontWeight: 'bold',
   },
   inputContainer: {
     flexDirection: 'row',
@@ -276,11 +295,15 @@ const styles = StyleSheet.create({
     textAlign: 'center', // Center the error message
   },
   modesLabel: {
-    fontSize: 16,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
     marginTop: 20,
   },
+  separator: {
+    borderBottomColor: 'black',
+    borderBottomWidth: StyleSheet.hairlineWidth,
+  }
 });
 
 export default HomeScreen;
