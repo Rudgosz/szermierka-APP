@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button, View, Text, FlatList, TouchableOpacity, StyleSheet, TextInput, Switch } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons'; // Importing MaterialIcons from Expo vector icons
-
-
+import { MaterialIcons } from '@expo/vector-icons';
 
 const data = [
   { 
@@ -23,49 +21,39 @@ function HomeScreen({ navigation }) {
   const [turnOffTimeMin, setTurnOffTimeMin] = useState(data[0].turnOffTimeMin);
   const [turnOffTimeMax, setTurnOffTimeMax] = useState(data[0].turnOffTimeMax);
   
-  // State for disabling FlatList
   const [disableFlatList, setDisableFlatList] = useState(false);
-
-  // State for error messages
   const [maxOffTimeError, setMaxOffTimeError] = useState(false);
   const [turnOnTimeError, setTurnOnTimeError] = useState(false);
   const [turnOffTimeMinError, setTurnOffTimeMinError] = useState(false);
   const [turnOffTimeMaxError, setTurnOffTimeMaxError] = useState(false);
 
-  // State for toggle switches
   const [isAttackSwitchOn, setIsAttackSwitchOn] = useState(true);
   const [isDodgeSwitchOn, setIsDodgeSwitchOn] = useState(true);
   const [isParrySwitchOn, setIsParrySwitchOn] = useState(true);
 
-  // Effect to check and set error state
   useEffect(() => {
-    // Function to check if value is a valid number
     const isValidNumber = (value) => {
-      return /^\d+$/.test(value); // Matches one or more digits
+      return /^\d+$/.test(value);
     };
 
-    // Check if any required input is empty or if Min Off Time > Max Off Time
     if (!turnOnTimeMax || !turnOffTimeMin || !turnOffTimeMax || turnOffTimeMin > turnOffTimeMax || !isValidNumber(turnOnTimeMax) || !isValidNumber(turnOffTimeMin) || !isValidNumber(turnOffTimeMax) || (!isAttackSwitchOn && !isDodgeSwitchOn && !isParrySwitchOn)) {
       setDisableFlatList(true);
     } else {
       setDisableFlatList(false);
     }
 
-    // Check if Min Off Time > Max Off Time
     if (turnOffTimeMin > turnOffTimeMax) {
       setMaxOffTimeError(true);
     } else {
       setMaxOffTimeError(false);
     }
 
-    // Check for invalid input errors
     setTurnOnTimeError(!isValidNumber(turnOnTimeMax));
     setTurnOffTimeMinError(!isValidNumber(turnOffTimeMin));
     setTurnOffTimeMaxError(!isValidNumber(turnOffTimeMax));
 
   }, [turnOnTimeMax, turnOffTimeMin, turnOffTimeMax, isAttackSwitchOn, isDodgeSwitchOn, isParrySwitchOn]);
 
-  // Function to clear TextInput fields
   const clearTextInput = (setStateFunction) => {
     setStateFunction('');
   };
@@ -93,7 +81,7 @@ function HomeScreen({ navigation }) {
   );
 
   return (
-    <View style={{ flex: 1, padding: 20 }}>
+    <View style={{ flex: 1, padding: 20, backgroundColor: '#f8f1e9' }}>
       <Text style={styles.label}>Turn On Time [ms]:</Text>
       <View style={styles.inputContainer}>
         <TextInput
@@ -102,7 +90,6 @@ function HomeScreen({ navigation }) {
           value={String(turnOnTimeMax)}
           onChangeText={text => setTurnOnTimeMax(text)}
         />
-        {/* Clear button for Turn On Time */}
         {!!turnOnTimeMax && (
           <TouchableOpacity
             style={styles.clearButton}
@@ -124,7 +111,6 @@ function HomeScreen({ navigation }) {
           value={String(turnOffTimeMin)}
           onChangeText={text => setTurnOffTimeMin(text)}
         />
-        {/* Clear button for Min Off Time */}
         {!!turnOffTimeMin && (
           <TouchableOpacity
             style={styles.clearButton}
@@ -138,7 +124,6 @@ function HomeScreen({ navigation }) {
         <Text style={styles.errorText}>Enter valid number</Text>
       )}
 
-      {/* Error message for Min > Max */}
       {maxOffTimeError && (
         <Text style={styles.errorText}>Min must be less than Max</Text>
       )}
@@ -151,7 +136,6 @@ function HomeScreen({ navigation }) {
           value={String(turnOffTimeMax)}
           onChangeText={text => setTurnOffTimeMax(text)}
         />
-        {/* Clear button for Max Off Time */}
         {!!turnOffTimeMax && (
           <TouchableOpacity
             style={styles.clearButton}
@@ -165,21 +149,16 @@ function HomeScreen({ navigation }) {
         <Text style={styles.errorText}>Enter valid number</Text>
       )}
 
-      {/* Modes label */}
       <Text style={styles.modesLabel}>Modes:</Text>
 
-      {/* Toggle switches */}
       <View style={styles.toggleContainer}>
-
-      <View style={styles.separator}/>
+        <View style={styles.separator}/>
         
         <View style={styles.toggleRow}>
-          
-          <Text style={styles.labelModes}>Attack (green):</Text>
-          
+          <Text style={styles.labelModes}>Attack [green]:</Text>
           <Switch
-            trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={isAttackSwitchOn ? "#f5dd4b" : "#f4f3f4"}
+           trackColor={{ false: "#767577", true: "#9c938c" }}
+            thumbColor={isAttackSwitchOn ? "#870f01" : "#f4f3f4"}
             ios_backgroundColor="#3e3e3e"
             onValueChange={() => setIsAttackSwitchOn(!isAttackSwitchOn)}
             value={isAttackSwitchOn}
@@ -189,10 +168,10 @@ function HomeScreen({ navigation }) {
         <View style={styles.separator}/>
 
         <View style={styles.toggleRow}>
-          <Text style={styles.labelModes}>Dodge (red):</Text>
+          <Text style={styles.labelModes}>Dodge [red]:</Text>
           <Switch
-            trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={isDodgeSwitchOn ? "#f5dd4b" : "#f4f3f4"}
+            trackColor={{ false: "#767577", true: "#9c938c" }}
+            thumbColor={isDodgeSwitchOn ? "#870f01" : "#f4f3f4"}
             ios_backgroundColor="#3e3e3e"
             onValueChange={() => setIsDodgeSwitchOn(!isDodgeSwitchOn)}
             value={isDodgeSwitchOn}
@@ -201,10 +180,10 @@ function HomeScreen({ navigation }) {
         <View style={styles.separator}/>
 
         <View style={styles.toggleRow}>
-          <Text style={styles.labelModes}>Parry (yellow):</Text>
+          <Text style={styles.labelModes}>Parry [yellow]:</Text>
           <Switch
-            trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={isParrySwitchOn ? "#f5dd4b" : "#f4f3f4"}
+            trackColor={{ false: "#767577", true: "#9c938c" }}
+            thumbColor={isParrySwitchOn ? "#870f01" : "#f4f3f4"}
             ios_backgroundColor="#3e3e3e"
             onValueChange={() => setIsParrySwitchOn(!isParrySwitchOn)}
             value={isParrySwitchOn}
@@ -229,53 +208,57 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginVertical: 20,
+    color: '#3d1a0a', // Dark brown color
   },
   item: {
-    backgroundColor: '#a38874',
+    backgroundColor: '#660c01', // Darker brown
     padding: 15,
     marginVertical: 5,
     marginHorizontal: 5,
     alignItems: 'center',
+    borderRadius: 10,
   },
   disabledItem: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#d4b59e', // Lighter brown
   },
   title: {
     fontSize: 22,
+    color: '#f3ebe1', // Light parchment color
   },
   flatListContainer: {
     flexGrow: 1,
     justifyContent: 'flex-end',
-    paddingBottom: 20, // Add padding at the bottom
+    paddingBottom: 50,
   },
   label: {
-    fontSize: 14,
+    fontSize: 16,
     marginBottom: 5,
     fontWeight: 'bold',
+    color: '#3d1a0a', // Dark brown color
   },
   labelModes: {
     fontSize: 19,
-    //marginBottom: 5,
-    //marginTop: 5,
-    //fontWeight: 'bold',
-    
+    color: '#3d1a0a', // Dark brown color
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 10,
-    position: 'relative', // Ensure position relative for absolute positioning of clear button
+    position: 'relative',
+    backgroundColor: '#fff1e6', // Light parchment color
+    borderRadius: 5,
   },
   input: {
     flex: 1,
     height: 40,
-    borderColor: 'gray',
+    borderColor: '#3d1a0a', // Dark brown color
     borderWidth: 1,
     paddingHorizontal: 10,
+    borderRadius: 5,
   },
   inputError: {
-    borderColor: 'red', // Change border color for error state
+    borderColor: 'red',
   },
   clearButton: {
     position: 'absolute',
@@ -295,16 +278,17 @@ const styles = StyleSheet.create({
   errorText: {
     color: 'red',
     marginBottom: 5,
-    textAlign: 'center', // Center the error message
+    textAlign: 'center',
   },
   modesLabel: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
     marginTop: 20,
+    color: '#3d1a0a', // Dark brown color
   },
   separator: {
-    borderBottomColor: 'black',
+    borderBottomColor: '#3d1a0a', // Dark brown color
     borderBottomWidth: StyleSheet.hairlineWidth,
   }
 });
