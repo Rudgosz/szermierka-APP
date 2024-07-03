@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, View, Text, FlatList, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
+import { Button, View, Text, FlatList, TouchableOpacity, StyleSheet, TextInput, Switch } from 'react-native';
 
 const data = [
   { 
@@ -16,15 +16,14 @@ const data = [
 ];
 
 function HomeScreen({ navigation }) {
-
-
-
   const [turnOnTimeMax, setTurnOnTimeMax] = useState(data[0].turnOnTimeMax);
   const [turnOffTimeMin, setTurnOffTimeMin] = useState(data[0].turnOffTimeMin);
   const [turnOffTimeMax, setTurnOffTimeMax] = useState(data[0].turnOffTimeMax);
 
-
-
+  // State for toggle switches
+  const [isSwitch1On, setIsSwitch1On] = useState(false);
+  const [isSwitch2On, setIsSwitch2On] = useState(false);
+  const [isSwitch3On, setIsSwitch3On] = useState(false);
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -50,23 +49,58 @@ function HomeScreen({ navigation }) {
       <TextInput
         style={styles.input}
         keyboardType='numeric'
-        value={String(turnOnTimeMax/1000)}
+        value={String(turnOnTimeMax / 1000)}
         onChangeText={text => setTurnOnTimeMax(Number(text))}
       />
       <Text style={styles.label}>Min Off Time [s]:</Text>
       <TextInput
         style={styles.input}
         keyboardType='numeric'
-        value={String(turnOffTimeMin/1000)}
+        value={String(turnOffTimeMin / 1000)}
         onChangeText={text => setTurnOffTimeMin(Number(text))}
       />
       <Text style={styles.label}>Max Off Time [s]:</Text>
       <TextInput
         style={styles.input}
         keyboardType='numeric'
-        value={String(turnOffTimeMax/1000)}
+        value={String(turnOffTimeMax / 1000)}
         onChangeText={text => setTurnOffTimeMax(Number(text))}
       />
+
+      {/* Toggle switches */}
+      <View style={styles.toggleContainer}>
+        <View style={styles.toggleRow}>
+          <Text style={styles.label}>Color 1:</Text>
+          <Switch
+            trackColor={{ false: "#767577", true: "#81b0ff" }}
+            thumbColor={isSwitch1On ? "#f5dd4b" : "#f4f3f4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={() => setIsSwitch1On(!isSwitch1On)}
+            value={isSwitch1On}
+          />
+        </View>
+        <View style={styles.toggleRow}>
+          <Text style={styles.label}>Color 2:</Text>
+          <Switch
+            trackColor={{ false: "#767577", true: "#81b0ff" }}
+            thumbColor={isSwitch2On ? "#f5dd4b" : "#f4f3f4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={() => setIsSwitch2On(!isSwitch2On)}
+            value={isSwitch2On}
+          />
+        </View>
+        <View style={styles.toggleRow}>
+          <Text style={styles.label}>Color 3:</Text>
+          <Switch
+            trackColor={{ false: "#767577", true: "#81b0ff" }}
+            thumbColor={isSwitch3On ? "#f5dd4b" : "#f4f3f4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={() => setIsSwitch3On(!isSwitch3On)}
+            value={isSwitch3On}
+          />
+        </View>
+      </View>
+
       <FlatList
         data={data}
         renderItem={renderItem}
@@ -109,6 +143,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingHorizontal: 10,
     marginBottom: 20,
+  },
+  toggleContainer: {
+    marginBottom: 20,
+  },
+  toggleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
   },
 });
 
