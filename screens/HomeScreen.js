@@ -43,18 +43,11 @@ function HomeScreen({ navigation }) {
     };
 
     // Check if any required input is empty or if Min Off Time > Max Off Time
-    if (!turnOnTimeMax || !turnOffTimeMin || !turnOffTimeMax || turnOffTimeMin > turnOffTimeMax || !isValidNumber(turnOnTimeMax) || !isValidNumber(turnOffTimeMin) || !isValidNumber(turnOffTimeMax)) {
+    if (!turnOnTimeMax || !turnOffTimeMin || !turnOffTimeMax || turnOffTimeMin > turnOffTimeMax || !isValidNumber(turnOnTimeMax) || !isValidNumber(turnOffTimeMin) || !isValidNumber(turnOffTimeMax) || (!isAttackSwitchOn && !isDodgeSwitchOn && !isParrySwitchOn)) {
       setDisableFlatList(true);
     } else {
       setDisableFlatList(false);
     }
-
-    if (!isAttackSwitchOn && !isDodgeSwitchOn && !isParrySwitchOn) {
-      setDisableFlatList(true);
-    } else {
-      setDisableFlatList(false);
-    }
-    
 
     // Check if Min Off Time > Max Off Time
     if (turnOffTimeMin > turnOffTimeMax) {
@@ -74,9 +67,6 @@ function HomeScreen({ navigation }) {
   const clearTextInput = (setStateFunction) => {
     setStateFunction('');
   };
-
-
-  
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -172,6 +162,9 @@ function HomeScreen({ navigation }) {
       {turnOffTimeMaxError && (
         <Text style={styles.errorText}>Enter valid number</Text>
       )}
+
+      {/* Modes label */}
+      <Text style={styles.modesLabel}>Modes:</Text>
 
       {/* Toggle switches */}
       <View style={styles.toggleContainer}>
@@ -281,6 +274,12 @@ const styles = StyleSheet.create({
     color: 'red',
     marginBottom: 5,
     textAlign: 'center', // Center the error message
+  },
+  modesLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    marginTop: 20,
   },
 });
 
