@@ -14,10 +14,13 @@ const bottomWidthConst = Math.sqrt((Math.pow(screenHeight / 2, 2) + Math.pow(scr
 
 //color
 const backgroundColor = '#f0f0f0';
+const coloredTriangleColors = ['yellow', 'green', 'red']; // Colors to randomly choose from
 
 //time
-const turnOnTime = 1000;
-const turnOffTime = 500;
+const minTurnOnTime = 1000; // Minimum turn on time (in milliseconds)
+const maxTurnOnTime = 1600; // Maximum turn on time (in milliseconds)
+const minTurnOffTime = 500; // Minimum turn off time (in milliseconds)
+const maxTurnOffTime = 1200; // Maximum turn off time (in milliseconds)
 
 //==================================================
 
@@ -42,35 +45,45 @@ const TriangleScreen = () => {
   const [isCountdownActive, setIsCountdownActive] = useState(false);
 
   useEffect(() => {
-    if (isColoringActive) {
+    let interval;
+
+    const startColorAnimation = () => {
       const triangleNames = Object.keys(defaultTriangleColors);
-      
-      // Define possible colors
-      const possibleColors = ['yellow', 'green', 'red'];
-      
+
       const changeColor = () => {
         const randomTriangle = triangleNames[Math.floor(Math.random() * triangleNames.length)];
         const originalColor = defaultTriangleColors[randomTriangle];
-        
-        // Select a random color from possibleColors
-        const randomColor = possibleColors[Math.floor(Math.random() * possibleColors.length)];
+        const randomColor = coloredTriangleColors[Math.floor(Math.random() * coloredTriangleColors.length)];
 
         setTriangleColors((prevColors) => ({
           ...prevColors,
-          [randomTriangle]: randomColor
+          [randomTriangle]: randomColor // Set random color
         }));
 
         setTimeout(() => {
           setTriangleColors((prevColors) => ({
             ...prevColors,
-            [randomTriangle]: originalColor
+            [randomTriangle]: originalColor // Revert to original color
           }));
-        }, turnOnTime);
+        }, minTurnOnTime); // Revert to original color after minimum turn on time
       };
 
-      const interval = setInterval(changeColor, turnOffTime + turnOnTime);
-      return () => clearInterval(interval);
+      // Wait before starting the color change animation
+      setTimeout(() => {
+        setIsDimmed(false); // Turn off overlay
+        setIsColoringActive(true); // Start color change animation
+        changeColor(); // Initial color change
+        interval = setInterval(changeColor, maxTurnOffTime + maxTurnOnTime); // Continuous color change
+      }, minTurnOffTime);
+    };
+
+    if (isColoringActive) {
+      startColorAnimation();
     }
+
+    return () => {
+      clearInterval(interval); // Cleanup function
+    };
   }, [isColoringActive]);
 
   const toggleOverlay = () => {
@@ -222,6 +235,7 @@ const styles = StyleSheet.create({
     width: screenWidth / 6,
     height: screenWidth / 6,
     borderRadius: screenWidth / 1,
+    //backgroundColor: 'blue', // Change color as needed
     top: screenHeight / 2 + triangleOffset - screenWidth / 12,
     left: screenWidth / 2 - screenWidth / 12,
   },
