@@ -47,6 +47,8 @@ const Training = ({ route }) => {
   const [displayedTurnOffTime, setDisplayedTurnOffTime] = useState(0);
   const [lastActiveTriangle, setLastActiveTriangle] = useState(null); // State to track last active triangle
 
+
+
   //const randomTimeFactorTurnOn = (turnOnTimeMax - turnOnTimeMin) / (turnOnTimeMaxFactor - turnOnTimeMinFactor - 1);
   //const randomTimeFactorTurnOff = (turnOffTimeMax - turnOffTimeMin) / (turnOffTimeMaxFactor - turnOffTimeMinFactor - 1);
 
