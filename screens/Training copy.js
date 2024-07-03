@@ -3,92 +3,98 @@ import { View, StyleSheet, Dimensions, Text, TouchableWithoutFeedback } from 're
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
-
 const triangleWidthConst = 10;
 const triangleOffset = 30;
-
 const rotationAngle = Math.atan(screenWidth / screenHeight); // Radians
 const bottomWidthConst = Math.sqrt((Math.pow(screenHeight / 2, 2) + Math.pow(screenWidth / 2, 2))) * 1;
 
+//=================SETTINGS=========================
+
+//color
+const backgroundColor = '#f0f0f0';
+
+//time ranges
+
+
+const turnOnTimeMin = 500;
+const turnOnTimeMax = 1500;
+const turnOffTimeMin = 500;
+const turnOffTimeMax = 3000;
 
 
 
-//================================================
-const coloredTriangleColor = 'red';
-
+//1 in 5
 const turnOnTimeMinFactor = 1;
 const turnOnTimeMaxFactor = 6;
 const turnOffTimeMinFactor = 1;
 const turnOffTimeMaxFactor = 6;
 
-//=================================================
+
+//==================================================
+
+
+
+
+const randomTimeFactorTurnOn = (turnOnTimeMax - turnOnTimeMin) / (turnOnTimeMaxFactor - turnOnTimeMinFactor - 1);
+const randomTimeFactorTurnOff = (turnOffTimeMax - turnOffTimeMin) / (turnOffTimeMaxFactor - turnOffTimeMinFactor - 1);
+
 
 const defaultTriangleColors = {
-  blueTriangle: '#b5b5b5',
-  redTriangle: '#b5b5b5',
-  greenTriangle: '#b5b5b5',
-  yellowTriangle: '#b5b5b5',
-  purpleTriangle: '#b5b5b5',
-  orangeTriangle: '#b5b5b5',
-  pinkTriangle: '#b5b5b5',
-  cyanTriangle: '#b5b5b5',
-  middleTriangle: '#b5b5b5',
+  blueTriangle: '#b5b5b5',       //bottom
+  redTriangle: '#b5b5b5',        //top
+  greenTriangle: '#b5b5b5',      //right
+  yellowTriangle: '#b5b5b5',     //left
+  purpleTriangle: '#b5b5b5',     //bottom left
+  orangeTriangle: '#b5b5b5',     //bottom right
+  pinkTriangle: '#b5b5b5',       //upper left
+  cyanTriangle: '#b5b5b5',       //upper right
+  middleTriangle: '#b5b5b5',     //circle
 };
 
-const TrainingDodge = ({ route }) => {
-  const { backgroundColor, turnOnTimeMin, turnOnTimeMax, turnOffTimeMin, turnOffTimeMax } = route.params;
+// Function to generate a random value between min and max
+const getRandomTime = (min, max) => (Math.floor(Math.random() * (max - min + 1)) + min);
+
+
+
+const TriangleScreen = () => {
   const [triangleColors, setTriangleColors] = useState(defaultTriangleColors);
   const [isDimmed, setIsDimmed] = useState(true);
   const [isColoringActive, setIsColoringActive] = useState(false);
   const [overlayColor, setOverlayColor] = useState('rgba(0, 0, 0, 0.5)');
   const [message, setMessage] = useState('tap to train');
   const [isCountdownActive, setIsCountdownActive] = useState(false);
-  const [displayedTurnOnTime, setDisplayedTurnOnTime] = useState(0);
-  const [displayedTurnOffTime, setDisplayedTurnOffTime] = useState(0);
-  const [lastActiveTriangle, setLastActiveTriangle] = useState(null); // State to track last active triangle
 
   useEffect(() => {
-    const getRandomTime = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-    const randomTimeFactorTurnOn = (turnOnTimeMax - turnOnTimeMin) / (turnOnTimeMaxFactor - turnOnTimeMinFactor - 1);
-    const randomTimeFactorTurnOff = (turnOffTimeMax - turnOffTimeMin) / (turnOffTimeMaxFactor - turnOffTimeMinFactor - 1);
-
-    let turnOnTime = (getRandomTime(turnOnTimeMinFactor, turnOnTimeMaxFactor)) * randomTimeFactorTurnOn + (turnOnTimeMin - randomTimeFactorTurnOn);
-    let turnOffTime = (getRandomTime(turnOffTimeMinFactor, turnOffTimeMaxFactor)) * randomTimeFactorTurnOff + (turnOffTimeMin - randomTimeFactorTurnOff);
-
-    setDisplayedTurnOnTime(turnOnTime);
-    setDisplayedTurnOffTime(turnOffTime);
-
     if (isColoringActive) {
       const triangleNames = Object.keys(defaultTriangleColors);
+
+      // Define possible colors
+      const possibleColors = ['yellow', 'green', 'red'];
+
       const changeColor = () => {
         const randomTriangle = triangleNames[Math.floor(Math.random() * triangleNames.length)];
         const originalColor = defaultTriangleColors[randomTriangle];
 
-        setTriangleColors(prevColors => ({
+        // Select a random color from possibleColors
+        const randomColor = possibleColors[Math.floor(Math.random() * possibleColors.length)];
+
+        setTriangleColors((prevColors) => ({
           ...prevColors,
-          [randomTriangle]: coloredTriangleColor
+          [randomTriangle]: randomColor
         }));
 
-        // Update turnOnTime and turnOffTime when triangle turns green
-        if (randomTriangle !== lastActiveTriangle) {
-          setLastActiveTriangle(randomTriangle);
-          setDisplayedTurnOnTime(turnOnTime);
-          setDisplayedTurnOffTime(turnOffTime);
-        }
-
         setTimeout(() => {
-          setTriangleColors(prevColors => ({
+          setTriangleColors((prevColors) => ({
             ...prevColors,
             [randomTriangle]: originalColor
           }));
-        }, turnOnTime);
+        }, ((getRandomTime(turnOnTimeMinFactor, turnOnTimeMaxFactor)) * randomTimeFactorTurnOn + (turnOnTimeMin-randomTimeFactorTurnOn)) );
       };
 
-      let interval = setInterval(changeColor, turnOffTime + turnOnTime);
+      const interval = setInterval(changeColor, ((getRandomTime(turnOffTimeMinFactor, turnOffTimeMaxFactor)) * randomTimeFactorTurnOff + (turnOffTimeMin-randomTimeFactorTurnOff))  + ((getRandomTime(turnOnTimeMinFactor, turnOnTimeMaxFactor)) * randomTimeFactorTurnOn + (turnOnTimeMin-randomTimeFactorTurnOn)));
       return () => clearInterval(interval);
     }
-  }, [isColoringActive, lastActiveTriangle]);
+  }, [isColoringActive]);
 
   const toggleOverlay = () => {
     if (!isCountdownActive) {
@@ -129,8 +135,7 @@ const TrainingDodge = ({ route }) => {
 
   return (
     <TouchableWithoutFeedback onPress={toggleOverlay} onPressIn={handlePressIn} onPressOut={handlePressOut}>
-      <View style={[styles.container, { backgroundColor }]}>
-        {/* Render triangles and overlay */}
+      <View style={styles.container}>
         <View style={[styles.triangle, styles.blueTriangle, { borderBottomColor: triangleColors.blueTriangle }]} />
         <View style={[styles.triangle, styles.redTriangle, { borderBottomColor: triangleColors.redTriangle }]} />
         <View style={[styles.triangle, styles.greenTriangle, { borderBottomColor: triangleColors.greenTriangle }]} />
@@ -140,15 +145,7 @@ const TrainingDodge = ({ route }) => {
         <View style={[styles.triangle, styles.pinkTriangle, { borderBottomColor: triangleColors.pinkTriangle }]} />
         <View style={[styles.triangle, styles.cyanTriangle, { borderBottomColor: triangleColors.cyanTriangle }]} />
         <View style={[styles.middleTriangle, { backgroundColor: triangleColors.middleTriangle }]} />
-        <View style={[styles.grayRectangle, { backgroundColor }]} />
-
-        {/* Display turnOnTime and turnOffTime */}
-        <View style={styles.topMessageContainer}>
-          <Text style={styles.topMessageText}>Turn On Time: {displayedTurnOnTime} ms</Text>
-          <Text style={styles.topMessageText}>Turn Off Time: {displayedTurnOffTime} ms</Text>
-        </View>
-
-        {/* Display overlay during countdown */}
+        <View style={styles.grayRectangle} />
         {isDimmed && (
           <View style={[styles.overlay, { backgroundColor: overlayColor }]}>
             <Text style={isCountdownActive ? styles.countdownText : styles.overlayText}>{message}</Text>
@@ -164,6 +161,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     alignItems: 'center',
+    backgroundColor: backgroundColor,
   },
   triangle: {
     position: 'absolute',
@@ -256,6 +254,7 @@ const styles = StyleSheet.create({
     left: 0,
     width: screenWidth,
     height: triangleOffset,
+    backgroundColor: backgroundColor,
   },
   overlay: {
     position: 'absolute',
@@ -277,18 +276,6 @@ const styles = StyleSheet.create({
     fontSize: 200,
     fontWeight: 'bold',
   },
-  topMessageContainer: {
-    position: 'absolute',
-    top: 20,
-    width: '100%',
-    alignItems: 'center',
-    zIndex: 1, // Ensure this is above triangles
-  },
-  topMessageText: {
-    color: '#000',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
 });
 
-export default TrainingDodge;
+export default TriangleScreen;
