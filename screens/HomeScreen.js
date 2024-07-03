@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, View, Text, FlatList, TouchableOpacity, StyleSheet, TextInput, Switch } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons'; // Importing MaterialIcons from Expo vector icons
 
 const data = [
   { 
@@ -19,16 +20,58 @@ function HomeScreen({ navigation }) {
   const [turnOnTimeMax, setTurnOnTimeMax] = useState(data[0].turnOnTimeMax);
   const [turnOffTimeMin, setTurnOffTimeMin] = useState(data[0].turnOffTimeMin);
   const [turnOffTimeMax, setTurnOffTimeMax] = useState(data[0].turnOffTimeMax);
+  
+  // State for disabling FlatList
+  const [disableFlatList, setDisableFlatList] = useState(false);
+
+  // State for error messages
+  const [maxOffTimeError, setMaxOffTimeError] = useState(false);
+  const [turnOnTimeError, setTurnOnTimeError] = useState(false);
+  const [turnOffTimeMinError, setTurnOffTimeMinError] = useState(false);
+  const [turnOffTimeMaxError, setTurnOffTimeMaxError] = useState(false);
 
   // State for toggle switches
   const [isAttackSwitchOn, setIsAttackSwitchOn] = useState(true);
   const [isDodgeSwitchOn, setIsDodgeSwitchOn] = useState(true);
   const [isParrySwitchOn, setIsParrySwitchOn] = useState(true);
 
+  // Effect to check and set error state
+  useEffect(() => {
+    // Function to check if value is a valid number
+    const isValidNumber = (value) => {
+      return /^\d+$/.test(value); // Matches one or more digits
+    };
+
+    // Check if any required input is empty or if Min Off Time > Max Off Time
+    if (!turnOnTimeMax || !turnOffTimeMin || !turnOffTimeMax || turnOffTimeMin > turnOffTimeMax || !isValidNumber(turnOnTimeMax) || !isValidNumber(turnOffTimeMin) || !isValidNumber(turnOffTimeMax)) {
+      setDisableFlatList(true);
+    } else {
+      setDisableFlatList(false);
+    }
+
+    // Check if Min Off Time > Max Off Time
+    if (turnOffTimeMin > turnOffTimeMax) {
+      setMaxOffTimeError(true);
+    } else {
+      setMaxOffTimeError(false);
+    }
+
+    // Check for invalid input errors
+    setTurnOnTimeError(!isValidNumber(turnOnTimeMax));
+    setTurnOffTimeMinError(!isValidNumber(turnOffTimeMin));
+    setTurnOffTimeMaxError(!isValidNumber(turnOffTimeMax));
+
+  }, [turnOnTimeMax, turnOffTimeMin, turnOffTimeMax]);
+
+  // Function to clear TextInput fields
+  const clearTextInput = (setStateFunction) => {
+    setStateFunction('');
+  };
+
   const renderItem = ({ item }) => (
     <TouchableOpacity
-      style={styles.item}
-      onPress={() => navigation.navigate(item.key, { 
+      style={[styles.item, disableFlatList && styles.disabledItem]}
+      onPress={() => !disableFlatList && navigation.navigate(item.key, { 
         backgroundColor: item.backgroundColor,
         turnOnTimeMax: turnOnTimeMax,
         turnOnTimeMin: turnOnTimeMax,
@@ -41,6 +84,7 @@ function HomeScreen({ navigation }) {
         isDodgeSwitchOn: isDodgeSwitchOn,
         isParrySwitchOn: isParrySwitchOn, 
       })}
+      disabled={disableFlatList}
     >
       <Text style={styles.title}>{item.title}</Text>
     </TouchableOpacity>
@@ -49,26 +93,75 @@ function HomeScreen({ navigation }) {
   return (
     <View style={{ flex: 1, padding: 20 }}>
       <Text style={styles.label}>Turn On Time [ms]:</Text>
-      <TextInput
-        style={styles.input}
-        keyboardType='numeric'
-        value={String(turnOnTimeMax)}
-        onChangeText={text => setTurnOnTimeMax(Number(text))}
-      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={[styles.input, turnOnTimeError && styles.inputError]}
+          keyboardType='numeric'
+          value={String(turnOnTimeMax)}
+          onChangeText={text => setTurnOnTimeMax(text)}
+        />
+        {/* Clear button for Turn On Time */}
+        {!!turnOnTimeMax && (
+          <TouchableOpacity
+            style={styles.clearButton}
+            onPress={() => clearTextInput(setTurnOnTimeMax)}
+          >
+            <MaterialIcons name="cancel" size={20} color="gray" />
+          </TouchableOpacity>
+        )}
+      </View>
+      {turnOnTimeError && (
+        <Text style={styles.errorText}>Enter valid number</Text>
+      )}
+
       <Text style={styles.label}>Min Off Time [ms]:</Text>
-      <TextInput
-        style={styles.input}
-        keyboardType='numeric'
-        value={String(turnOffTimeMin)}
-        onChangeText={text => setTurnOffTimeMin(Number(text))}
-      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={[styles.input, turnOffTimeMinError && styles.inputError]}
+          keyboardType='numeric'
+          value={String(turnOffTimeMin)}
+          onChangeText={text => setTurnOffTimeMin(text)}
+        />
+        {/* Clear button for Min Off Time */}
+        {!!turnOffTimeMin && (
+          <TouchableOpacity
+            style={styles.clearButton}
+            onPress={() => clearTextInput(setTurnOffTimeMin)}
+          >
+            <MaterialIcons name="cancel" size={20} color="gray" />
+          </TouchableOpacity>
+        )}
+      </View>
+      {turnOffTimeMinError && (
+        <Text style={styles.errorText}>Enter valid number</Text>
+      )}
+
+      {/* Error message for Min > Max */}
+      {maxOffTimeError && (
+        <Text style={styles.errorText}>Min must be less than Max</Text>
+      )}
+
       <Text style={styles.label}>Max Off Time [ms]:</Text>
-      <TextInput
-        style={styles.input}
-        keyboardType='numeric'
-        value={String(turnOffTimeMax)}
-        onChangeText={text => setTurnOffTimeMax(Number(text))}
-      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={[styles.input, turnOffTimeMaxError && styles.inputError]}
+          keyboardType='numeric'
+          value={String(turnOffTimeMax)}
+          onChangeText={text => setTurnOffTimeMax(text)}
+        />
+        {/* Clear button for Max Off Time */}
+        {!!turnOffTimeMax && (
+          <TouchableOpacity
+            style={styles.clearButton}
+            onPress={() => clearTextInput(setTurnOffTimeMax)}
+          >
+            <MaterialIcons name="cancel" size={20} color="gray" />
+          </TouchableOpacity>
+        )}
+      </View>
+      {turnOffTimeMaxError && (
+        <Text style={styles.errorText}>Enter valid number</Text>
+      )}
 
       {/* Toggle switches */}
       <View style={styles.toggleContainer}>
@@ -128,6 +221,9 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     alignItems: 'center',
   },
+  disabledItem: {
+    backgroundColor: '#ccc',
+  },
   title: {
     fontSize: 22,
   },
@@ -140,12 +236,27 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginBottom: 5,
   },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    position: 'relative', // Ensure position relative for absolute positioning of clear button
+  },
   input: {
+    flex: 1,
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
     paddingHorizontal: 10,
-    marginBottom: 20,
+  },
+  inputError: {
+    borderColor: 'red', // Change border color for error state
+  },
+  clearButton: {
+    position: 'absolute',
+    right: 10,
+    padding: 8,
   },
   toggleContainer: {
     marginBottom: 20,
@@ -155,6 +266,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
+  },
+  errorText: {
+    color: 'red',
+    marginBottom: 5,
+    textAlign: 'center', // Center the error message
   },
 });
 
