@@ -4,23 +4,29 @@ import { Button, View, Text, FlatList, TouchableOpacity, StyleSheet } from 'reac
 const data = [
   { 
     key: 'Training',
-    title: 'Full training',
+    title: 'START TRAINING',
     backgroundColor: '#f0f0f0',
-    turnOnTimeMin: 1000,
-    turnOnTimeMax: 1000,
-    turnOffTimeMin: 1000,
+    turnOnTimeMin: 1500,
+    turnOnTimeMax: 1500,
+    turnOffTimeMin: 2000,
     turnOffTimeMax: 4000,
+    color1: 'red',
+    color2: 'green',
+    color3: 'yellow',
   },
-
+/*
   { 
     //green
     key: 'TrainingAttack',
     title: 'Training attack',
     backgroundColor: '#f0f0f0',
-    turnOnTimeMin: 1000,
-    turnOnTimeMax: 1000,
+    turnOnTimeMin: 1500,
+    turnOnTimeMax: 1500,
     turnOffTimeMin: 1000,
     turnOffTimeMax: 4000,
+    color1: 'red',
+    color2: 'green',
+    color3: 'yellow',
   },
 
   { 
@@ -28,10 +34,13 @@ const data = [
     key: 'TrainingParry',
     title: 'Training parry',
     backgroundColor: '#f0f0f0',
-    turnOnTimeMin: 1000,
-    turnOnTimeMax: 1000,
+    turnOnTimeMin: 1500,
+    turnOnTimeMax: 1500,
     turnOffTimeMin: 1000,
     turnOffTimeMax: 4000,
+    color1: 'red',
+    color2: 'green',
+    color3: 'yellow',
   },
 
   { 
@@ -39,13 +48,16 @@ const data = [
     key: 'TrainingDodge',
     title: 'Training dodge',
     backgroundColor: '#f0f0f0',
-    turnOnTimeMin: 1000,
-    turnOnTimeMax: 1000,
+    turnOnTimeMin: 1500,
+    turnOnTimeMax: 1500,
     turnOffTimeMin: 1000,
     turnOffTimeMax: 4000,
+    color1: 'red',
+    color2: 'green',
+    color3: 'yellow',
   },
 
-  
+*/
   // Add more items as needed
 ];
 
@@ -55,10 +67,13 @@ function HomeScreen({ navigation }) {
       style={styles.item}
       onPress={() => navigation.navigate(item.key, { 
         backgroundColor: item.backgroundColor,
-        turnOnTimeMin: item.turnOnTimeMin,
+        turnOnTimeMin: item.turnOnTimeMax,
         turnOnTimeMax: item.turnOnTimeMax,
         turnOffTimeMin: item.turnOffTimeMin,
-        turnOffTimeMax: item.turnOffTimeMax, 
+        turnOffTimeMax: item.turnOffTimeMax,
+        color1: item.color1, 
+        color2: item.color2, 
+        color3: item.color3, 
       })}
     >
       <Text style={styles.title}>{item.title}</Text>
@@ -91,7 +106,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: 20,
+    fontSize: 22,
   },
 });
 

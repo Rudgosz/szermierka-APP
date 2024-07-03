@@ -36,7 +36,7 @@ const defaultTriangleColors = {
 //const getRandomTime = (min, max) => (Math.floor(Math.random() * (max - min + 1)) + min);
 
 const Training = ({ route }) => {
-  const { backgroundColor, turnOnTimeMin, turnOnTimeMax, turnOffTimeMin, turnOffTimeMax } = route.params;  // Get the passed background color and time parameters
+  const { backgroundColor, turnOnTimeMin, turnOnTimeMax, turnOffTimeMin, turnOffTimeMax, color1, color2, color3 } = route.params;  // Get the passed background color and time parameters
   const [triangleColors, setTriangleColors] = useState(defaultTriangleColors);
   const [isDimmed, setIsDimmed] = useState(true);
   const [isColoringActive, setIsColoringActive] = useState(false);
@@ -71,7 +71,7 @@ const Training = ({ route }) => {
       const triangleNames = Object.keys(defaultTriangleColors);
 
       // Define possible colors
-      const possibleColors = ['yellow', 'green', 'red'];
+      const possibleColors = [color1, color2, color3];
 
       const changeColor = () => {
         const randomTriangle = triangleNames[Math.floor(Math.random() * triangleNames.length)];
