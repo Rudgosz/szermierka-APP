@@ -36,7 +36,7 @@ const defaultTriangleColors = {
 //const getRandomTime = (min, max) => (Math.floor(Math.random() * (max - min + 1)) + min);
 
 const Training = ({ route }) => {
-  const { backgroundColor, turnOnTimeMin, turnOnTimeMax, turnOffTimeMin, turnOffTimeMax, color1, color2, color3,  } = route.params;  // Get the passed background color and time parameters
+  const { backgroundColor, turnOnTimeMin, turnOnTimeMax, turnOffTimeMin, turnOffTimeMax, isAttackSwitchOn, isParrySwitchOn, isDodgeSwitchOn, attackColor, dodgeColor, parryColor,} = route.params;  // Get the passed background color and time parameters
   const [triangleColors, setTriangleColors] = useState(defaultTriangleColors);
   const [isDimmed, setIsDimmed] = useState(true);
   const [isColoringActive, setIsColoringActive] = useState(false);
@@ -71,9 +71,18 @@ const Training = ({ route }) => {
 
     if (isColoringActive) {
       const triangleNames = Object.keys(defaultTriangleColors);
+      
+      //let isSwitch1OnT = 1;
+      //let isSwitch2OnT = 0;
+      //let isSwitch3OnT = 0;
 
       // Define possible colors
-      const possibleColors = [color1, color2, color3];
+      let possibleColors = [];
+
+      // Assuming isSwitch1On, isSwitch2On, and isSwitch3On are boolean variables
+      if (isAttackSwitchOn) possibleColors.push(attackColor);
+      if (isDodgeSwitchOn) possibleColors.push(dodgeColor);
+      if (isParrySwitchOn) possibleColors.push(parryColor);
 
       const changeColor = () => {
         const randomTriangle = triangleNames[Math.floor(Math.random() * triangleNames.length)];

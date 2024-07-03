@@ -6,12 +6,12 @@ const data = [
     key: 'Training',
     title: 'START TRAINING',
     backgroundColor: '#f0f0f0',
-    turnOnTimeMax: 3000,
+    turnOnTimeMax: 1000,
     turnOffTimeMin: 2000,
-    turnOffTimeMax: 4000,
-    color1: 'red',
-    color2: 'green',
-    color3: 'yellow',
+    turnOffTimeMax: 3000,
+    attackColor: 'green',
+    dodgeColor: 'red',
+    parryColor: 'yellow',
   },
 ];
 
@@ -21,9 +21,9 @@ function HomeScreen({ navigation }) {
   const [turnOffTimeMax, setTurnOffTimeMax] = useState(data[0].turnOffTimeMax);
 
   // State for toggle switches
-  const [isSwitch1On, setIsSwitch1On] = useState(false);
-  const [isSwitch2On, setIsSwitch2On] = useState(false);
-  const [isSwitch3On, setIsSwitch3On] = useState(false);
+  const [isAttackSwitchOn, setIsAttackSwitchOn] = useState(true);
+  const [isDodgeSwitchOn, setIsDodgeSwitchOn] = useState(true);
+  const [isParrySwitchOn, setIsParrySwitchOn] = useState(true);
 
   const renderItem = ({ item }) => (
     <TouchableOpacity
@@ -34,9 +34,12 @@ function HomeScreen({ navigation }) {
         turnOnTimeMin: turnOnTimeMax,
         turnOffTimeMin: item.turnOffTimeMin,
         turnOffTimeMax: turnOffTimeMax,
-        color1: item.color1, 
-        color2: item.color2, 
-        color3: item.color3, 
+        attackColor: item.attackColor, 
+        dodgeColor: item.dodgeColor, 
+        parryColor: item.parryColor,
+        isAttackSwitchOn: isAttackSwitchOn,
+        isDodgeSwitchOn: isDodgeSwitchOn,
+        isParrySwitchOn: isParrySwitchOn, 
       })}
     >
       <Text style={styles.title}>{item.title}</Text>
@@ -45,58 +48,58 @@ function HomeScreen({ navigation }) {
 
   return (
     <View style={{ flex: 1, padding: 20 }}>
-      <Text style={styles.label}>Turn On Time [s]:</Text>
+      <Text style={styles.label}>Turn On Time [ms]:</Text>
       <TextInput
         style={styles.input}
         keyboardType='numeric'
-        value={String(turnOnTimeMax / 1000)}
+        value={String(turnOnTimeMax)}
         onChangeText={text => setTurnOnTimeMax(Number(text))}
       />
-      <Text style={styles.label}>Min Off Time [s]:</Text>
+      <Text style={styles.label}>Min Off Time [ms]:</Text>
       <TextInput
         style={styles.input}
         keyboardType='numeric'
-        value={String(turnOffTimeMin / 1000)}
+        value={String(turnOffTimeMin)}
         onChangeText={text => setTurnOffTimeMin(Number(text))}
       />
-      <Text style={styles.label}>Max Off Time [s]:</Text>
+      <Text style={styles.label}>Max Off Time [ms]:</Text>
       <TextInput
         style={styles.input}
         keyboardType='numeric'
-        value={String(turnOffTimeMax / 1000)}
+        value={String(turnOffTimeMax)}
         onChangeText={text => setTurnOffTimeMax(Number(text))}
       />
 
       {/* Toggle switches */}
       <View style={styles.toggleContainer}>
         <View style={styles.toggleRow}>
-          <Text style={styles.label}>Color 1:</Text>
+          <Text style={styles.label}>Attack (green):</Text>
           <Switch
             trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={isSwitch1On ? "#f5dd4b" : "#f4f3f4"}
+            thumbColor={isAttackSwitchOn ? "#f5dd4b" : "#f4f3f4"}
             ios_backgroundColor="#3e3e3e"
-            onValueChange={() => setIsSwitch1On(!isSwitch1On)}
-            value={isSwitch1On}
+            onValueChange={() => setIsAttackSwitchOn(!isAttackSwitchOn)}
+            value={isAttackSwitchOn}
           />
         </View>
         <View style={styles.toggleRow}>
-          <Text style={styles.label}>Color 2:</Text>
+          <Text style={styles.label}>Dodge (red):</Text>
           <Switch
             trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={isSwitch2On ? "#f5dd4b" : "#f4f3f4"}
+            thumbColor={isDodgeSwitchOn ? "#f5dd4b" : "#f4f3f4"}
             ios_backgroundColor="#3e3e3e"
-            onValueChange={() => setIsSwitch2On(!isSwitch2On)}
-            value={isSwitch2On}
+            onValueChange={() => setIsDodgeSwitchOn(!isDodgeSwitchOn)}
+            value={isDodgeSwitchOn}
           />
         </View>
         <View style={styles.toggleRow}>
-          <Text style={styles.label}>Color 3:</Text>
+          <Text style={styles.label}>Parry (yellow):</Text>
           <Switch
             trackColor={{ false: "#767577", true: "#81b0ff" }}
-            thumbColor={isSwitch3On ? "#f5dd4b" : "#f4f3f4"}
+            thumbColor={isParrySwitchOn ? "#f5dd4b" : "#f4f3f4"}
             ios_backgroundColor="#3e3e3e"
-            onValueChange={() => setIsSwitch3On(!isSwitch3On)}
-            value={isSwitch3On}
+            onValueChange={() => setIsParrySwitchOn(!isParrySwitchOn)}
+            value={isParrySwitchOn}
           />
         </View>
       </View>
