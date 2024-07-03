@@ -254,9 +254,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   labelModes: {
-    fontSize: 18,
-    marginBottom: 5,
+    fontSize: 19,
+    //marginBottom: 5,
+    //marginTop: 5,
     //fontWeight: 'bold',
+    
   },
   inputContainer: {
     flexDirection: 'row',
@@ -287,7 +289,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 3,
+    marginTop: 3,
   },
   errorText: {
     color: 'red',
