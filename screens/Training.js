@@ -30,21 +30,25 @@ const turnOffTimeMinFactor = 1;
 const turnOffTimeMaxFactor = 6;
 
 
+//==================================================
+
+
 
 
 const randomTimeFactorTurnOn = (turnOnTimeMax - turnOnTimeMin) / (turnOnTimeMaxFactor - turnOnTimeMinFactor - 1);
 const randomTimeFactorTurnOff = (turnOffTimeMax - turnOffTimeMin) / (turnOffTimeMaxFactor - turnOffTimeMinFactor - 1);
-//==================================================
+
+
 const defaultTriangleColors = {
-  blueTriangle: '#b5b5b5',
-  redTriangle: '#b5b5b5',
-  greenTriangle: '#b5b5b5',
-  yellowTriangle: '#b5b5b5',
-  purpleTriangle: '#b5b5b5',
-  orangeTriangle: '#b5b5b5',
-  pinkTriangle: '#b5b5b5',
-  cyanTriangle: '#b5b5b5',
-  middleTriangle: '#b5b5b5',
+  blueTriangle: '#b5b5b5',       //bottom
+  redTriangle: '#b5b5b5',        //top
+  greenTriangle: '#b5b5b5',      //right
+  yellowTriangle: '#b5b5b5',     //left
+  purpleTriangle: '#b5b5b5',     //bottom left
+  orangeTriangle: '#b5b5b5',     //bottom right
+  pinkTriangle: '#b5b5b5',       //upper left
+  cyanTriangle: '#b5b5b5',       //upper right
+  middleTriangle: '#b5b5b5',     //circle
 };
 
 // Function to generate a random value between min and max

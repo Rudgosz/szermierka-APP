@@ -16,22 +16,46 @@ const bottomWidthConst = Math.sqrt((Math.pow(screenHeight / 2, 2) + Math.pow(scr
 const backgroundColor = '#f0f0f0';
 const coloredTriangleColor = 'green';
 
-//time
-const turnOnTime = 1000;
-const turnOffTime = 500;
+
+
+//time ranges
+const turnOnTimeMin = 500;
+const turnOnTimeMax = 1500;
+const turnOffTimeMin = 500;
+const turnOffTimeMax = 3000;
+
+//1 in 5
+const turnOnTimeMinFactor = 1;
+const turnOnTimeMaxFactor = 6;
+const turnOffTimeMinFactor = 1;
+const turnOffTimeMaxFactor = 6;
+
 
 //==================================================
 
+
+
+const randomTimeFactorTurnOn = (turnOnTimeMax - turnOnTimeMin) / (turnOnTimeMaxFactor - turnOnTimeMinFactor - 1);
+const randomTimeFactorTurnOff = (turnOffTimeMax - turnOffTimeMin) / (turnOffTimeMaxFactor - turnOffTimeMinFactor - 1);
+
+
+// Function to generate a random value between min and max
+const getRandomTime = (min, max) => (Math.floor(Math.random() * (max - min + 1)) + min);
+
+
+
+
+
 const defaultTriangleColors = {
-  blueTriangle: '#b5b5b5',
-  redTriangle: '#b5b5b5',
-  greenTriangle: '#b5b5b5',
-  yellowTriangle: '#b5b5b5',
-  purpleTriangle: '#b5b5b5',
-  orangeTriangle: '#b5b5b5',
-  pinkTriangle: '#b5b5b5',
-  cyanTriangle: '#b5b5b5',
-  middleTriangle: '#b5b5b5',
+  blueTriangle: '#b5b5b5',       //bottom
+  redTriangle: '#b5b5b5',        //top
+  greenTriangle: '#b5b5b5',      //right
+  yellowTriangle: '#b5b5b5',     //left
+  purpleTriangle: '#b5b5b5',     //bottom left
+  orangeTriangle: '#b5b5b5',     //bottom right
+  pinkTriangle: '#b5b5b5',       //upper left
+  cyanTriangle: '#b5b5b5',       //upper right
+  middleTriangle: '#b5b5b5',     //circle
 };
 
 const TriangleScreen = () => {
@@ -59,10 +83,10 @@ const TriangleScreen = () => {
             ...prevColors,
             [randomTriangle]: originalColor
           }));
-        }, turnOnTime);
+        }, ((getRandomTime(turnOnTimeMinFactor, turnOnTimeMaxFactor)) * randomTimeFactorTurnOn + (turnOnTimeMin-randomTimeFactorTurnOn)) );
       };
 
-      const interval = setInterval(changeColor, turnOffTime + turnOnTime);
+      const interval = setInterval(changeColor, ((getRandomTime(turnOffTimeMinFactor, turnOffTimeMaxFactor)) * randomTimeFactorTurnOff + (turnOffTimeMin-randomTimeFactorTurnOff))  + ((getRandomTime(turnOnTimeMinFactor, turnOnTimeMaxFactor)) * randomTimeFactorTurnOn + (turnOnTimeMin-randomTimeFactorTurnOn)));
       return () => clearInterval(interval);
     }
   }, [isColoringActive]);

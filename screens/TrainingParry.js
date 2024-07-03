@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Dimensions, Text, TouchableOpacity, TouchableWithoutFeedback } from 'react-native';
+import { View, StyleSheet, Dimensions, Text, TouchableWithoutFeedback } from 'react-native';
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
@@ -16,36 +16,55 @@ const bottomWidthConst = Math.sqrt((Math.pow(screenHeight / 2, 2) + Math.pow(scr
 const backgroundColor = '#f0f0f0';
 const coloredTriangleColor = 'yellow';
 
-//time
-const turnOnTime = 1000;
-const turnOffTime = 500;
 
 
+//time ranges
+const turnOnTimeMin = 500;
+const turnOnTimeMax = 1500;
+const turnOffTimeMin = 500;
+const turnOffTimeMax = 3000;
+
+//1 in 5
+const turnOnTimeMinFactor = 1;
+const turnOnTimeMaxFactor = 6;
+const turnOffTimeMinFactor = 1;
+const turnOffTimeMaxFactor = 6;
 
 
 //==================================================
 
 
 
+const randomTimeFactorTurnOn = (turnOnTimeMax - turnOnTimeMin) / (turnOnTimeMaxFactor - turnOnTimeMinFactor - 1);
+const randomTimeFactorTurnOff = (turnOffTimeMax - turnOffTimeMin) / (turnOffTimeMaxFactor - turnOffTimeMinFactor - 1);
+
+
+// Function to generate a random value between min and max
+const getRandomTime = (min, max) => (Math.floor(Math.random() * (max - min + 1)) + min);
+
+
+
+
 
 const defaultTriangleColors = {
-  blueTriangle: '#b5b5b5',
-  redTriangle: '#b5b5b5',
-  greenTriangle: '#b5b5b5',
-  yellowTriangle: '#b5b5b5',
-  purpleTriangle: '#b5b5b5',
-  orangeTriangle: '#b5b5b5',
-  pinkTriangle: '#b5b5b5',
-  cyanTriangle: '#b5b5b5'
+  blueTriangle: '#b5b5b5',       //bottom
+  redTriangle: '#b5b5b5',        //top
+  greenTriangle: '#b5b5b5',      //right
+  yellowTriangle: '#b5b5b5',     //left
+  purpleTriangle: '#b5b5b5',     //bottom left
+  orangeTriangle: '#b5b5b5',     //bottom right
+  pinkTriangle: '#b5b5b5',       //upper left
+  cyanTriangle: '#b5b5b5',       //upper right
+  middleTriangle: '#b5b5b5',     //circle
 };
-
-
 
 const TriangleScreen = () => {
   const [triangleColors, setTriangleColors] = useState(defaultTriangleColors);
   const [isDimmed, setIsDimmed] = useState(true);
   const [isColoringActive, setIsColoringActive] = useState(false);
   const [overlayColor, setOverlayColor] = useState('rgba(0, 0, 0, 0.5)');
+  const [message, setMessage] = useState('tap to train');
+  const [isCountdownActive, setIsCountdownActive] = useState(false);
 
   useEffect(() => {
     if (isColoringActive) {
@@ -64,25 +83,49 @@ const TriangleScreen = () => {
             ...prevColors,
             [randomTriangle]: originalColor
           }));
-        }, turnOnTime);
+        }, ((getRandomTime(turnOnTimeMinFactor, turnOnTimeMaxFactor)) * randomTimeFactorTurnOn + (turnOnTimeMin-randomTimeFactorTurnOn)) );
       };
 
-      const interval = setInterval(changeColor, turnOffTime + turnOnTime);
+      const interval = setInterval(changeColor, ((getRandomTime(turnOffTimeMinFactor, turnOffTimeMaxFactor)) * randomTimeFactorTurnOff + (turnOffTimeMin-randomTimeFactorTurnOff))  + ((getRandomTime(turnOnTimeMinFactor, turnOnTimeMaxFactor)) * randomTimeFactorTurnOn + (turnOnTimeMin-randomTimeFactorTurnOn)));
       return () => clearInterval(interval);
     }
   }, [isColoringActive]);
 
   const toggleOverlay = () => {
-    setIsDimmed(!isDimmed);
-    setIsColoringActive(!isColoringActive);
+    if (!isCountdownActive) {
+      if (isDimmed) {
+        setIsCountdownActive(true);
+        setMessage('3');
+        let countdown = 3;
+        const countdownInterval = setInterval(() => {
+          countdown -= 1;
+          if (countdown > 0) {
+            setMessage(countdown.toString());
+          } else {
+            clearInterval(countdownInterval);
+            setIsDimmed(false);
+            setIsColoringActive(true);
+            setIsCountdownActive(false);
+          }
+        }, 1000);
+      } else {
+        setIsDimmed(true);
+        setIsColoringActive(false);
+        setMessage('tap to train');
+      }
+    }
   };
 
   const handlePressIn = () => {
-    setOverlayColor('rgba(0, 0, 0, 0.5)');
+    if (!isCountdownActive) {
+      setOverlayColor('rgba(0, 0, 0, 0.7)');
+    }
   };
 
   const handlePressOut = () => {
-    setOverlayColor('rgba(0, 0, 0, 0.5)');
+    if (!isCountdownActive) {
+      setOverlayColor('rgba(0, 0, 0, 0.5)');
+    }
   };
 
   return (
@@ -96,10 +139,11 @@ const TriangleScreen = () => {
         <View style={[styles.triangle, styles.orangeTriangle, { borderBottomColor: triangleColors.orangeTriangle }]} />
         <View style={[styles.triangle, styles.pinkTriangle, { borderBottomColor: triangleColors.pinkTriangle }]} />
         <View style={[styles.triangle, styles.cyanTriangle, { borderBottomColor: triangleColors.cyanTriangle }]} />
+        <View style={[styles.middleTriangle, { backgroundColor: triangleColors.middleTriangle }]} />
         <View style={styles.grayRectangle} />
         {isDimmed && (
           <View style={[styles.overlay, { backgroundColor: overlayColor }]}>
-            <Text style={styles.overlayText}>Tap to train</Text>
+            <Text style={isCountdownActive ? styles.countdownText : styles.overlayText}>{message}</Text>
           </View>
         )}
       </View>
@@ -191,6 +235,15 @@ const styles = StyleSheet.create({
       { translateY: bottomWidthConst / 2 },
     ],
   },
+  middleTriangle: {
+    position: 'absolute',
+    width: screenWidth / 6,
+    height: screenWidth / 6,
+    borderRadius: screenWidth / 1,
+    //backgroundColor: 'blue', // Change color as needed
+    top: screenHeight / 2 + triangleOffset - screenWidth / 12,
+    left: screenWidth / 2 - screenWidth / 12,
+  },
   grayRectangle: {
     position: 'absolute',
     top: 0,
@@ -211,9 +264,15 @@ const styles = StyleSheet.create({
   },
   overlayText: {
     color: '#fff',
-    fontSize: 24,
+    fontSize: 50,
     fontWeight: 'bold',
   },
+  countdownText: {
+    color: '#fff',
+    fontSize: 200,
+    fontWeight: 'bold',
+  },
+  
 });
 
 export default TriangleScreen;
