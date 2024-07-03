@@ -3,10 +3,8 @@ import { View, StyleSheet, Dimensions, Text, TouchableWithoutFeedback } from 're
 
 const screenHeight = Dimensions.get('window').height;
 const screenWidth = Dimensions.get('window').width;
-
 const triangleWidthConst = 10;
 const triangleOffset = 30;
-
 const rotationAngle = Math.atan(screenWidth / screenHeight); // Radians
 const bottomWidthConst = Math.sqrt((Math.pow(screenHeight / 2, 2) + Math.pow(screenWidth / 2, 2))) * 1;
 
@@ -14,16 +12,29 @@ const bottomWidthConst = Math.sqrt((Math.pow(screenHeight / 2, 2) + Math.pow(scr
 
 //color
 const backgroundColor = '#f0f0f0';
-const coloredTriangleColors = ['yellow', 'green', 'red']; // Colors to randomly choose from
 
-//time
-const minTurnOnTime = 1000; // Minimum turn on time (in milliseconds)
-const maxTurnOnTime = 1600; // Maximum turn on time (in milliseconds)
-const minTurnOffTime = 500; // Minimum turn off time (in milliseconds)
-const maxTurnOffTime = 1200; // Maximum turn off time (in milliseconds)
+//time ranges
 
+
+const turnOnTimeMin = 500;
+const turnOnTimeMax = 1500;
+const turnOffTimeMin = 500;
+const turnOffTimeMax = 3000;
+
+
+
+//1 in 5
+const turnOnTimeMinFactor = 1;
+const turnOnTimeMaxFactor = 6;
+const turnOffTimeMinFactor = 1;
+const turnOffTimeMaxFactor = 6;
+
+
+
+
+const randomTimeFactorTurnOn = (turnOnTimeMax - turnOnTimeMin) / (turnOnTimeMaxFactor - turnOnTimeMinFactor - 1);
+const randomTimeFactorTurnOff = (turnOffTimeMax - turnOffTimeMin) / (turnOffTimeMaxFactor - turnOffTimeMinFactor - 1);
 //==================================================
-
 const defaultTriangleColors = {
   blueTriangle: '#b5b5b5',
   redTriangle: '#b5b5b5',
@@ -36,6 +47,11 @@ const defaultTriangleColors = {
   middleTriangle: '#b5b5b5',
 };
 
+// Function to generate a random value between min and max
+const getRandomTime = (min, max) => (Math.floor(Math.random() * (max - min + 1)) + min);
+
+
+
 const TriangleScreen = () => {
   const [triangleColors, setTriangleColors] = useState(defaultTriangleColors);
   const [isDimmed, setIsDimmed] = useState(true);
@@ -45,45 +61,35 @@ const TriangleScreen = () => {
   const [isCountdownActive, setIsCountdownActive] = useState(false);
 
   useEffect(() => {
-    let interval;
-
-    const startColorAnimation = () => {
+    if (isColoringActive) {
       const triangleNames = Object.keys(defaultTriangleColors);
+
+      // Define possible colors
+      const possibleColors = ['yellow', 'green', 'red'];
 
       const changeColor = () => {
         const randomTriangle = triangleNames[Math.floor(Math.random() * triangleNames.length)];
         const originalColor = defaultTriangleColors[randomTriangle];
-        const randomColor = coloredTriangleColors[Math.floor(Math.random() * coloredTriangleColors.length)];
+
+        // Select a random color from possibleColors
+        const randomColor = possibleColors[Math.floor(Math.random() * possibleColors.length)];
 
         setTriangleColors((prevColors) => ({
           ...prevColors,
-          [randomTriangle]: randomColor // Set random color
+          [randomTriangle]: randomColor
         }));
 
         setTimeout(() => {
           setTriangleColors((prevColors) => ({
             ...prevColors,
-            [randomTriangle]: originalColor // Revert to original color
+            [randomTriangle]: originalColor
           }));
-        }, minTurnOnTime); // Revert to original color after minimum turn on time
+        }, ((getRandomTime(turnOnTimeMinFactor, turnOnTimeMaxFactor)) * randomTimeFactorTurnOn + (turnOnTimeMin-randomTimeFactorTurnOn)) );
       };
 
-      // Wait before starting the color change animation
-      setTimeout(() => {
-        setIsDimmed(false); // Turn off overlay
-        setIsColoringActive(true); // Start color change animation
-        changeColor(); // Initial color change
-        interval = setInterval(changeColor, maxTurnOffTime + maxTurnOnTime); // Continuous color change
-      }, minTurnOffTime);
-    };
-
-    if (isColoringActive) {
-      startColorAnimation();
+      const interval = setInterval(changeColor, ((getRandomTime(turnOffTimeMinFactor, turnOffTimeMaxFactor)) * randomTimeFactorTurnOff + (turnOffTimeMin-randomTimeFactorTurnOff))  + ((getRandomTime(turnOnTimeMinFactor, turnOnTimeMaxFactor)) * randomTimeFactorTurnOn + (turnOnTimeMin-randomTimeFactorTurnOn)));
+      return () => clearInterval(interval);
     }
-
-    return () => {
-      clearInterval(interval); // Cleanup function
-    };
   }, [isColoringActive]);
 
   const toggleOverlay = () => {
@@ -235,7 +241,6 @@ const styles = StyleSheet.create({
     width: screenWidth / 6,
     height: screenWidth / 6,
     borderRadius: screenWidth / 1,
-    //backgroundColor: 'blue', // Change color as needed
     top: screenHeight / 2 + triangleOffset - screenWidth / 12,
     left: screenWidth / 2 - screenWidth / 12,
   },
